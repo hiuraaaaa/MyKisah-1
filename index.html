@@ -6,25 +6,49 @@
     <title>Tonari no Kanojo wa Gakkou no Joou datta Ken?!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Inter:wght@400;500;600&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-bg: #f9f9f9;
-            --text-color: #333;
-            --accent-color: #3498db;
-            --border-color: #e0e0e0;
-            --shadow-color: rgba(0, 0, 0, 0.08);
-            --font-heading: 'Poppins', sans-serif;
-            --font-body: 'Merriweather', serif;
+            --bg:        #0e0e12;
+            --bg-2:      #14141a;
+            --bg-3:      #1c1c26;
+            --surface:   #1e1e28;
+            --border:    rgba(255,255,255,0.07);
+            --text:      #e8e2d9;
+            --text-muted:#8a8490;
+            --accent:    #c9a96e;
+            --accent-dim:rgba(201,169,110,0.15);
+            --accent-glow:rgba(201,169,110,0.3);
+            --rose:      #d4849a;
+            --font-serif:'Noto Serif JP', Georgia, serif;
+            --font-sans: 'Inter', sans-serif;
+            --font-deco: 'Cinzel', serif;
         }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: var(--font-body);
-            background-color: var(--primary-bg);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
+            font-family: var(--font-serif);
+            background: var(--bg);
+            color: var(--text);
             overflow-x: hidden;
+            min-height: 100vh;
         }
+
+        /* ── NOISE TEXTURE OVERLAY ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.4;
+        }
+
+        /* ── SCREENS ── */
         .screen {
             min-height: 100vh;
             display: flex;
@@ -32,357 +56,669 @@
             justify-content: center;
             align-items: center;
             padding: 2rem;
-            box-sizing: border-box;
             position: absolute;
             width: 100%;
             top: 0;
             left: 0;
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transition: opacity 0.6s ease, transform 0.6s ease;
             opacity: 1;
-            transform: scale(1);
+            transform: translateY(0);
         }
         .screen.hidden {
             opacity: 0;
-            transform: scale(0.98);
+            transform: translateY(12px);
             pointer-events: none;
         }
 
-        #start-screen { z-index: 10; }
-        #cover-image {
-            max-width: 300px;
-            width: 80%;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px var(--shadow-color);
-            margin-bottom: 2.5rem;
-        }
-        .action-button {
-            font-family: var(--font-heading);
-            font-size: 1.1rem;
-            font-weight: 500;
-            padding: 12px 40px;
-            border-radius: 50px;
-            border: none;
-            background-color: var(--accent-color);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
-        }
-        .action-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
+        /* ── START SCREEN ── */
+        #start-screen {
+            z-index: 10;
+            background: radial-gradient(ellipse 80% 60% at 50% 30%, #1a1020 0%, var(--bg) 70%);
         }
 
-        #volume-selection-screen { z-index: 9; }
-        .selection-title {
-            font-family: var(--font-heading);
-            font-size: clamp(2rem, 8vw, 3.5rem);
-            font-weight: 700;
-            margin-bottom: 2rem;
-            color: var(--text-color);
+        .start-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            max-width: 420px;
+            width: 100%;
         }
+
+        .cover-wrap {
+            position: relative;
+            width: min(260px, 70vw);
+        }
+        .cover-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--rose), transparent 60%);
+            z-index: -1;
+        }
+        #cover-image {
+            width: 100%;
+            border-radius: 12px;
+            display: block;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 40px rgba(201,169,110,0.15);
+        }
+
+        .novel-meta {
+            text-align: center;
+        }
+        .novel-label {
+            font-family: var(--font-deco);
+            font-size: 0.65rem;
+            letter-spacing: 0.25em;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+        }
+        .novel-title {
+            font-family: var(--font-sans);
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            font-weight: 500;
+            color: var(--text-muted);
+            line-height: 1.5;
+            max-width: 300px;
+        }
+
+        .start-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            padding: 0.85rem 2.2rem;
+            border-radius: 50px;
+            border: 1px solid var(--accent);
+            background: var(--accent-dim);
+            color: var(--accent);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+        }
+        .start-btn:hover {
+            background: var(--accent);
+            color: var(--bg);
+            box-shadow: 0 0 28px var(--accent-glow);
+        }
+        .start-btn svg { width: 16px; height: 16px; }
+
+        /* ── VOLUME SELECTION ── */
+        #volume-selection-screen {
+            z-index: 9;
+            background: var(--bg);
+            justify-content: flex-start;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+        }
+
+        .vol-sel-inner {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .screen-eyebrow {
+            font-family: var(--font-deco);
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+        .screen-heading {
+            font-family: var(--font-sans);
+            font-size: clamp(1.6rem, 6vw, 2.4rem);
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 2.5rem;
+            line-height: 1.2;
+        }
+
         #volume-list {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            width: 100%;
-            max-width: 500px;
+            gap: 0.75rem;
         }
+
         .volume-button {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.2rem;
             width: 100%;
-            padding: 1rem;
-            font-size: 1rem;
-            border-radius: 8px;
-            border: 2px solid var(--border-color);
-            background-color: #fff;
+            padding: 1rem 1.25rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             text-align: left;
-            box-shadow: 0 2px 5px var(--shadow-color);
+            color: var(--text);
+            position: relative;
+            overflow: hidden;
+        }
+        .volume-button::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 0.2s ease;
+            transform-origin: bottom;
         }
         .volume-button:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent-color);
-            box-shadow: 0 5px 15px var(--shadow-color);
+            background: var(--bg-3);
+            border-color: rgba(201,169,110,0.3);
+            transform: translateX(4px);
         }
-        .volume-button .num {
-            font-family: var(--font-heading);
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--accent-color);
-            background-color: rgba(52, 152, 219, 0.1);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+        .volume-button:hover::before { transform: scaleY(1); }
+
+        .vol-num {
+            font-family: var(--font-deco);
+            font-size: 0.9rem;
+            color: var(--accent);
+            background: var(--accent-dim);
+            border-radius: 6px;
+            width: 38px;
+            height: 38px;
             display: inline-flex;
             justify-content: center;
             align-items: center;
             flex-shrink: 0;
+            border: 1px solid rgba(201,169,110,0.2);
         }
-        .volume-button .title {
-            font-family: var(--font-body);
-            color: var(--text-color);
+        .vol-title-text {
+            font-family: var(--font-serif);
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.4;
         }
-        
-        #volume-title-screen { z-index: 8; text-align: center; }
-        #volume-main-title {
-            font-family: var(--font-heading);
-            font-size: clamp(2rem, 8vw, 4rem);
-            font-weight: 700;
-            color: var(--accent-color);
-            margin: 0;
-        }
-        #volume-sub-title {
-            font-family: var(--font-body);
-            font-size: clamp(1rem, 4vw, 1.5rem);
-            margin-top: 0.5rem;
-            margin-bottom: 3rem;
-            color: #7f8c8d;
+        .vol-chapter-count {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-left: auto;
+            flex-shrink: 0;
         }
 
+        /* ── VOLUME TITLE SCREEN ── */
+        #volume-title-screen {
+            z-index: 8;
+            text-align: center;
+            background: radial-gradient(ellipse 70% 50% at 50% 50%, #17101e 0%, var(--bg) 70%);
+        }
+
+        .vol-splash-inner {
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .vol-splash-label {
+            font-family: var(--font-deco);
+            font-size: 0.7rem;
+            letter-spacing: 0.35em;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+        #volume-main-title {
+            font-family: var(--font-deco);
+            font-size: clamp(3rem, 12vw, 5.5rem);
+            color: var(--accent);
+            line-height: 1;
+            text-shadow: 0 0 60px rgba(201,169,110,0.4);
+        }
+        #volume-sub-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1rem, 4vw, 1.3rem);
+            color: var(--text-muted);
+            line-height: 1.5;
+            max-width: 380px;
+        }
+
+        .vol-divider {
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        /* ── READER SCREEN ── */
         #reader-screen {
             z-index: 7;
             justify-content: flex-start;
-            padding-bottom: 120px;
-        }
-        .novel-container {
-            max-width: 800px;
-            width: 100%;
-            opacity: 0;
-            animation: fadeIn 0.8s ease-in-out forwards;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        
-        #chapter-title-display {
-            font-family: var(--font-heading);
-            font-size: clamp(1.5rem, 5vw, 2.2rem);
-            text-align: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid var(--border-color);
-        }
-        #chapter-content p {
-            font-size: 1.15rem;
-            line-height: 1.9;
-            margin-bottom: 1.5rem;
-            text-align: justify;
+            align-items: stretch;
+            padding: 0;
+            padding-bottom: 100px;
         }
 
+        /* Top bar */
+        .reader-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(14,14,18,0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .topbar-left {
+            display: flex;
+            flex-direction: column;
+        }
+        .topbar-volume {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .topbar-chapter {
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-top: 0.1rem;
+        }
+        .topbar-menu-btn {
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .topbar-menu-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Reading area */
+        .reader-body {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 1rem;
+        }
+
+        .chapter-header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+        .chapter-eyebrow {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+        #chapter-title-display {
+            font-family: var(--font-serif);
+            font-size: clamp(1.4rem, 5vw, 2rem);
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.4;
+        }
+
+        #chapter-content p {
+            font-size: 1.05rem;
+            line-height: 2;
+            margin-bottom: 1.4rem;
+            color: var(--text);
+            text-align: justify;
+        }
+        #chapter-content p:first-of-type::first-letter {
+            font-family: var(--font-deco);
+            font-size: 3.2em;
+            float: left;
+            line-height: 0.85;
+            margin: 0.05em 0.1em 0 0;
+            color: var(--accent);
+        }
+
+        .novel-container {
+            animation: fadeUp 0.7s ease both;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── BOTTOM NAV ── */
         #nav-container {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: linear-gradient(to top, rgba(249,249,249,1) 70%, rgba(249,249,249,0));
-            padding: 20px;
+            z-index: 100;
+            background: linear-gradient(to top, rgba(14,14,18,1) 55%, transparent);
+            padding: 1.5rem 1.5rem 1.2rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            z-index: 100;
-            box-sizing: border-box;
+            gap: 1rem;
         }
+
         .nav-button {
-            font-family: var(--font-heading);
-            font-size: 1rem;
-            padding: 10px 25px;
-            border-radius: 25px;
-            border: 2px solid var(--accent-color);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.7rem 1.6rem;
+            border-radius: 50px;
+            border: 1px solid var(--border);
             cursor: pointer;
-            background-color: white;
-            color: var(--accent-color);
-            transition: all 0.3s ease;
+            background: var(--surface);
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            letter-spacing: 0.04em;
         }
-        .nav-button:hover {
-            background-color: var(--accent-color);
-            color: white;
+        .nav-button:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
         }
         .nav-button:disabled {
-            border-color: var(--border-color);
-            color: var(--border-color);
+            opacity: 0.3;
             cursor: not-allowed;
-            background-color: #f9f9f9;
         }
+        .nav-button.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--bg);
+        }
+        .nav-button.primary:hover:not(:disabled) {
+            background: #d4b87a;
+            border-color: #d4b87a;
+            color: var(--bg);
+        }
+
+        /* ── PROGRESS BAR ── */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: var(--accent);
+            z-index: 200;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(201,169,110,0.3); }
+
+        /* ── BACK BUTTON (volume selection → start) ── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            margin-bottom: 2rem;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+        }
+        .back-link:hover { color: var(--accent); }
+
     </style>
 </head>
 <body>
 
-    <div id="start-screen" class="screen">
-        <img id="cover-image" src="https://nefu.life/lJKj9U.png" alt="Cover Novel">
-        <button id="start-reading-button" class="action-button">Mulai Baca</button>
-    </div>
+<div class="reading-progress" id="reading-progress"></div>
 
-    <div id="volume-selection-screen" class="screen hidden">
-        <h1 class="selection-title">Pilih Volume</h1>
+<!-- START SCREEN -->
+<div id="start-screen" class="screen">
+    <div class="start-inner">
+        <div class="cover-wrap">
+            <img id="cover-image" src="https://nefu.life/lJKj9U.png" alt="Cover Novel">
+        </div>
+        <div class="novel-meta">
+            <div class="novel-label">Light Novel · Bahasa Indonesia</div>
+            <div class="novel-title">Tonari no Kanojo wa Gakkou no Joou datta Ken?!</div>
+        </div>
+        <button id="start-reading-button" class="start-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Mulai Baca
+        </button>
+    </div>
+</div>
+
+<!-- VOLUME SELECTION SCREEN -->
+<div id="volume-selection-screen" class="screen hidden">
+    <div class="vol-sel-inner">
+        <button class="back-link" id="back-to-start-btn">
+            ← Kembali
+        </button>
+        <div class="screen-eyebrow">MyKisah</div>
+        <h1 class="screen-heading">Pilih Volume</h1>
         <div id="volume-list"></div>
     </div>
+</div>
 
-    <div id="volume-title-screen" class="screen hidden">
+<!-- VOLUME TITLE SCREEN -->
+<div id="volume-title-screen" class="screen hidden">
+    <div class="vol-splash-inner">
+        <div class="vol-splash-label">Tonari no Kanojo</div>
         <h1 id="volume-main-title"></h1>
+        <div class="vol-divider"></div>
         <h2 id="volume-sub-title"></h2>
-        <button id="start-volume-button" class="action-button">Mulai Volume</button>
+        <button id="start-volume-button" class="start-btn">
+            Mulai Baca
+        </button>
+        <button class="back-link" id="back-to-volumes-btn" style="margin-bottom:0">← Pilih Volume Lain</button>
+    </div>
+</div>
+
+<!-- READER SCREEN -->
+<div id="reader-screen" class="screen hidden">
+    <div class="reader-topbar">
+        <div class="topbar-left">
+            <span class="topbar-volume" id="topbar-volume-label"></span>
+            <span class="topbar-chapter" id="topbar-chapter-label"></span>
+        </div>
+        <button class="topbar-menu-btn" id="topbar-volumes-btn">Daftar Volume</button>
     </div>
 
-    <div id="reader-screen" class="screen hidden">
-        <div class="novel-container">
-            <h2 id="chapter-title-display"></h2>
+    <div class="reader-body">
+        <div class="novel-container" id="novel-container">
+            <div class="chapter-header">
+                <div class="chapter-eyebrow" id="chapter-eyebrow"></div>
+                <h2 id="chapter-title-display"></h2>
+            </div>
             <div id="chapter-content"></div>
         </div>
-        <div id="nav-container">
-            <button id="prev-btn" class="nav-button">Sebelumnya</button>
-            <button id="next-btn" class="nav-button">Selanjutnya</button>
-        </div>
     </div>
 
-    <script src="volume1.js"></script>
-    <script src="volume2.js"></script>
-    <script src="volume3.js"></script>
-    <script src="volume4.js"></script>
-    <script src="volume5.js"></script>
-    <script src="volume6.js"></script>
-    <script src="volume7.js"></script>
-    <script src="volume8.js"></script>
-    <script src="epilog.js"></script>
+    <div id="nav-container">
+        <button id="prev-btn" class="nav-button">← Sebelumnya</button>
+        <button id="next-btn" class="nav-button primary">Selanjutnya →</button>
+    </div>
+</div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const allVolumes = [
-            volume1Data, 
-            volume2Data, 
-            volume3Data, 
-            volume4Data,
-            volume5Data,
-            volume6Data,
-            volume7Data,
-            volume8Data,
-            epilogData
-        ];
-        let currentVolumeIndex = 0;
-        let currentChapterIndex = 0;
+<script src="volume1.js"></script>
+<script src="volume2.js"></script>
+<script src="volume3.js"></script>
+<script src="volume4.js"></script>
+<script src="volume5.js"></script>
+<script src="volume6.js"></script>
+<script src="volume7.js"></script>
+<script src="volume8.js"></script>
+<script src="epilog.js"></script>
 
-        const screens = {
-            start: document.getElementById('start-screen'),
-            volumeSelection: document.getElementById('volume-selection-screen'),
-            volumeTitle: document.getElementById('volume-title-screen'),
-            reader: document.getElementById('reader-screen'),
-        };
-        const volumeDisplay = {
-            mainTitle: document.getElementById('volume-main-title'),
-            subTitle: document.getElementById('volume-sub-title'),
-        };
-        const chapterDisplay = {
-            title: document.getElementById('chapter-title-display'),
-            content: document.getElementById('chapter-content'),
-        };
-        const buttons = {
-            startReading: document.getElementById('start-reading-button'),
-            startVolume: document.getElementById('start-volume-button'),
-            prev: document.getElementById('prev-btn'),
-            next: document.getElementById('next-btn'),
-        };
-        const volumeListContainer = document.getElementById('volume-list');
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const allVolumes = [
+        volume1Data, volume2Data, volume3Data, volume4Data,
+        volume5Data, volume6Data, volume7Data, volume8Data, epilogData
+    ];
+    let currentVolumeIndex = 0;
+    let currentChapterIndex = 0;
 
-        function switchScreen(screenToShow) {
-            window.scrollTo(0, 0);
-            for (const key in screens) {
-                screens[key].classList.add('hidden');
-            }
-            screenToShow.classList.remove('hidden');
-        }
+    const screens = {
+        start: document.getElementById('start-screen'),
+        volumeSelection: document.getElementById('volume-selection-screen'),
+        volumeTitle: document.getElementById('volume-title-screen'),
+        reader: document.getElementById('reader-screen'),
+    };
 
-        function populateVolumeList() {
-            volumeListContainer.innerHTML = '';
-            allVolumes.forEach((volume, index) => {
-                const button = document.createElement('button');
-                button.className = 'volume-button';
-                button.innerHTML = `<span class="num">${typeof volume.volumeNum === 'number' ? volume.volumeNum : 'E'}</span><span class="title">${volume.volumeTitle}</span>`;
-                button.addEventListener('click', () => {
-                    currentVolumeIndex = index;
-                    currentChapterIndex = 0;
-                    showVolumeTitle(index);
-                });
-                volumeListContainer.appendChild(button);
-            });
-        }
+    const progressBar = document.getElementById('reading-progress');
 
-        function showVolumeTitle(volumeIndex) {
-            window.scrollTo(0, 0);
-            const volume = allVolumes[volumeIndex];
-            volumeDisplay.mainTitle.textContent = `${typeof volume.volumeNum === 'number' ? 'Volume ' : ''}${volume.volumeNum}`;
-            volumeDisplay.subTitle.textContent = volume.volumeTitle;
-            switchScreen(screens.volumeTitle);
-        }
-
-        function showChapter(volIdx, chapIdx) {
-            window.scrollTo(0, 0);
-            const volume = allVolumes[volIdx];
-            const chapter = volume.chapters[chapIdx];
-            
-            const container = chapterDisplay.content.parentElement;
-            container.style.animation = 'none';
-            void container.offsetHeight;
-            container.style.animation = null;
-
-            chapterDisplay.title.textContent = `${typeof chapter.chapterNum === 'number' ? 'Bab ' + chapter.chapterNum + ': ' : ''}${chapter.chapterTitle}`;
-            
-            const paragraphs = chapter.content
-                .split('\n')
-                .filter(p => p.trim() !== '')
-                .map(p => `<p>${p.trim()}</p>`)
-                .join('');
-            chapterDisplay.content.innerHTML = paragraphs;
-            
-            updateNavButtons();
-            switchScreen(screens.reader);
-        }
-        
-        function updateNavButtons() {
-            buttons.prev.disabled = (currentVolumeIndex === 0 && currentChapterIndex === 0);
-
-            const lastVolumeIndex = allVolumes.length - 1;
-            const lastChapterIndex = allVolumes[lastVolumeIndex].chapters.length - 1;
-            buttons.next.disabled = (currentVolumeIndex === lastVolumeIndex && currentChapterIndex === lastChapterIndex);
-        }
-
-        function handleNext() {
-            const currentVolume = allVolumes[currentVolumeIndex];
-            if (currentChapterIndex < currentVolume.chapters.length - 1) {
-                currentChapterIndex++;
-                showChapter(currentVolumeIndex, currentChapterIndex);
-            } else if (currentVolumeIndex < allVolumes.length - 1) {
-                currentVolumeIndex++;
-                currentChapterIndex = 0;
-                showVolumeTitle(currentVolumeIndex);
-            }
-        }
-
-        function handlePrev() {
-            if (currentChapterIndex > 0) {
-                currentChapterIndex--;
-            } else if (currentVolumeIndex > 0) {
-                currentVolumeIndex--;
-                const prevVolume = allVolumes[currentVolumeIndex];
-                currentChapterIndex = prevVolume.chapters.length - 1;
-            }
-            showChapter(currentVolumeIndex, currentChapterIndex);
-        }
-
-        buttons.startReading.addEventListener('click', () => {
-            switchScreen(screens.volumeSelection);
-        });
-
-        buttons.startVolume.addEventListener('click', () => {
-            showChapter(currentVolumeIndex, currentChapterIndex);
-        });
-
-        buttons.next.addEventListener('click', handleNext);
-        buttons.prev.addEventListener('click', handlePrev);
-
-        populateVolumeList();
+    // Reading progress on scroll
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = pct + '%';
     });
-    </script>
+
+    function switchScreen(screenToShow) {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        Object.values(screens).forEach(s => s.classList.add('hidden'));
+        screenToShow.classList.remove('hidden');
+    }
+
+    function populateVolumeList() {
+        const container = document.getElementById('volume-list');
+        container.innerHTML = '';
+        allVolumes.forEach((vol, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'volume-button';
+            const numLabel = typeof vol.volumeNum === 'number' ? vol.volumeNum : 'E';
+            const chapCount = vol.chapters ? vol.chapters.length : '?';
+            btn.innerHTML = `
+                <span class="vol-num">${numLabel}</span>
+                <span class="vol-title-text">${vol.volumeTitle}</span>
+                <span class="vol-chapter-count">${chapCount} bab</span>
+            `;
+            btn.addEventListener('click', () => {
+                currentVolumeIndex = i;
+                currentChapterIndex = 0;
+                showVolumeTitle(i);
+            });
+            container.appendChild(btn);
+        });
+    }
+
+    function showVolumeTitle(volIdx) {
+        const vol = allVolumes[volIdx];
+        document.getElementById('volume-main-title').textContent =
+            typeof vol.volumeNum === 'number' ? `Vol. ${vol.volumeNum}` : vol.volumeNum;
+        document.getElementById('volume-sub-title').textContent = vol.volumeTitle;
+        switchScreen(screens.volumeTitle);
+    }
+
+    function showChapter(volIdx, chapIdx) {
+        const vol = allVolumes[volIdx];
+        const chap = vol.chapters[chapIdx];
+
+        // Topbar labels
+        document.getElementById('topbar-volume-label').textContent =
+            `${typeof vol.volumeNum === 'number' ? 'Volume ' : ''}${vol.volumeNum}`;
+        document.getElementById('topbar-chapter-label').textContent = chap.chapterTitle;
+
+        // Chapter eyebrow
+        document.getElementById('chapter-eyebrow').textContent =
+            typeof chap.chapterNum === 'number' ? `Bab ${chap.chapterNum}` : '';
+
+        // Chapter title
+        document.getElementById('chapter-title-display').textContent = chap.chapterTitle;
+
+        // Content
+        const contentEl = document.getElementById('chapter-content');
+        contentEl.innerHTML = chap.content
+            .split('\n')
+            .filter(p => p.trim())
+            .map(p => `<p>${p.trim()}</p>`)
+            .join('');
+
+        // Re-trigger animation
+        const container = document.getElementById('novel-container');
+        container.style.animation = 'none';
+        void container.offsetHeight;
+        container.style.animation = 'fadeUp 0.7s ease both';
+
+        updateNavButtons();
+        switchScreen(screens.reader);
+    }
+
+    function updateNavButtons() {
+        document.getElementById('prev-btn').disabled =
+            currentVolumeIndex === 0 && currentChapterIndex === 0;
+        const lastVol = allVolumes.length - 1;
+        const lastChap = allVolumes[lastVol].chapters.length - 1;
+        document.getElementById('next-btn').disabled =
+            currentVolumeIndex === lastVol && currentChapterIndex === lastChap;
+    }
+
+    function handleNext() {
+        const vol = allVolumes[currentVolumeIndex];
+        if (currentChapterIndex < vol.chapters.length - 1) {
+            currentChapterIndex++;
+            showChapter(currentVolumeIndex, currentChapterIndex);
+        } else if (currentVolumeIndex < allVolumes.length - 1) {
+            currentVolumeIndex++;
+            currentChapterIndex = 0;
+            showVolumeTitle(currentVolumeIndex);
+        }
+    }
+
+    function handlePrev() {
+        if (currentChapterIndex > 0) {
+            currentChapterIndex--;
+        } else if (currentVolumeIndex > 0) {
+            currentVolumeIndex--;
+            currentChapterIndex = allVolumes[currentVolumeIndex].chapters.length - 1;
+        }
+        showChapter(currentVolumeIndex, currentChapterIndex);
+    }
+
+    document.getElementById('start-reading-button').addEventListener('click', () => {
+        populateVolumeList();
+        switchScreen(screens.volumeSelection);
+    });
+    document.getElementById('back-to-start-btn').addEventListener('click', () => {
+        switchScreen(screens.start);
+    });
+    document.getElementById('back-to-volumes-btn').addEventListener('click', () => {
+        populateVolumeList();
+        switchScreen(screens.volumeSelection);
+    });
+    document.getElementById('start-volume-button').addEventListener('click', () => {
+        showChapter(currentVolumeIndex, currentChapterIndex);
+    });
+    document.getElementById('topbar-volumes-btn').addEventListener('click', () => {
+        populateVolumeList();
+        switchScreen(screens.volumeSelection);
+    });
+    document.getElementById('next-btn').addEventListener('click', handleNext);
+    document.getElementById('prev-btn').addEventListener('click', handlePrev);
+});
+</script>
 </body>
 </html>
